@@ -29,6 +29,8 @@ npm i
 
 # Added homebridge config.json
 `/root/.homebridge/config.json`
+and
+`/home/pi/.homebridge/config.json`
 ```
 {
  "bridge": {
@@ -50,3 +52,12 @@ npm i
   "platforms": []
 }
 ```
+
+Start with boot
+`sudo npm install -g pm2 --unsafe-perm`
+
+`pm2 startup`
+
+`pm2 start homebridge ( pm2 stop homebridge to disable or exit )`
+
+`pm2 save`
