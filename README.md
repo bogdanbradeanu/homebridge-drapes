@@ -15,12 +15,17 @@ Make sure that the /etc/nsswitch.conf contains this line:
 
 `hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4`
 
+`reboot`
+
+`pint drapes.local`
 
 
 # Adding this repo:
+```
 git pull into /home/pi/node_modules/
 cd homebridge-drapes
 npm i
+```
 
 # Added homebridge config.json
 `/root/.homebridge/config.json`
