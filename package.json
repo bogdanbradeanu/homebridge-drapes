@@ -1,0 +1,24 @@
+{
+  "name": "homebridge-http-drapes",
+  "version": "0.0.0-development",
+  "description": "Homebridge plugin to control Drapes",
+  "license": "MIT",
+  "keywords": [
+    "homebridge-plugin"
+  ],
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "author": {
+    "name": "Bogdan Bradeanu",
+    "email": "bogdan.bradeanu@me.com"
+  },
+  "preferGlobal": true,
+  "dependencies": {
+    "hap-nodejs": "^0.5.3",
+    "homebridge": "^0.4.50",
+    "request": "^2.88.0",
+    "url": "^0.11.0"
+  }
+}
