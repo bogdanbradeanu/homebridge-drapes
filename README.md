@@ -1,5 +1,10 @@
 # homebridge-drapes
 Homebridge drapes
+`/usr/local/lib/node_module`
+
+`git clone ...`
+
+`npm i`
 
 # Raspberry pi
 install node for armv6
@@ -28,9 +33,6 @@ npm i
 ```
 
 # Added homebridge config.json
-`/root/.homebridge/config.json`
-and
-`/home/pi/.homebridge/config.json`
 ```
 {
  "bridge": {
@@ -53,11 +55,5 @@ and
 }
 ```
 
-Start with boot
-`sudo npm install -g pm2 --unsafe-perm`
-
-`pm2 startup`
-
-`pm2 start homebridge ( pm2 stop homebridge to disable or exit )`
-
-`pm2 save`
+# Start with boot
+https://github.com/nfarina/homebridge/wiki/Install-Homebridge-on-Raspbian
