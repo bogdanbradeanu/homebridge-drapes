@@ -44,7 +44,7 @@ HttpDrapes.prototype = {
             },
             function (error, response, body) {
                 if (error) {
-                    me.log('STATUS: ' + response.statusCode);
+                    // me.log('STATUS: ' + response.statusCode);
                     me.log(error.message);
                     return next(error);
                 }
