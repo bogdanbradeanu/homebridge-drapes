@@ -16,7 +16,7 @@ function HttpDrapes(log, config) {
 
 HttpDrapes.prototype = {
     getRequestBaseUrl: function() {
-        return 'http://' + this.config['ip'] + '/';
+        return 'http://' + this.config['ip'];
     },
 
     getServices: function () {
@@ -66,7 +66,7 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
-                this.log('STATUS: ' + response.statusCode ? 'on' : 'off');
+                this.log('STATUS: ' + response.statusCode ? 'Active' : 'Off');
                 return next(null, body.statusCode);
             });
     },
@@ -84,7 +84,8 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
-                this.log('STATUS: ' + response.statusCode ? 'on' : 'off');
+                this.switchService.getCharacteristic(Characteristic.On).updateValue(Characteristic.On);
+                this.log('STATUS: ' + response.statusCode ? 'Active' : 'Off');
                 return next();
             });
     }
