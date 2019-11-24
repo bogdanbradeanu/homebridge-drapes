@@ -22,38 +22,14 @@ Make sure that the /etc/nsswitch.conf contains this line:
 
 `reboot`
 
-`pint drapes.local`
+`ping drapes.local`
 
+Also could add it to /etc/hosts
 
-# Adding this repo:
-```
-git pull into /home/pi/node_modules/
-cd homebridge-drapes
-npm i
-```
 
 # Added homebridge config.json
-```
-{
- "bridge": {
-    "name": "Homebridge",
-    "username": "CC:22:3D:E3:CE:30",
-    "port": 51826,
-    "pin": "031-45-154"
-  },
-  "description": "This is an example configuration file with one fake accessory and one fake platform. You can use this as a template for creating your own configuration file containing devices you actually own.",
-  "accessories": [
-     {
-         "accessory": "HttpDrapes",
-         "name": "Drapes",
-         "service": "Switch",
-         "getUrl": "http://drapes.local/api/status",
-         "postUrl": "http://drapes.local/api/set"
-      }
-  ],
-  "platforms": []
-}
-```
+`cp config.json to /var/lib/homebridge`
+
 
 # Start with boot
 https://github.com/nfarina/homebridge/wiki/Install-Homebridge-on-Raspbian
