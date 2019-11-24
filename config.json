@@ -11,7 +11,7 @@
       "accessory": "HttpDrapes",
       "name": "Drapes",
       "service": "Switch",
-      "ip": "192.168.1.170"
+      "host": "drapes.local"
     }
   ],
   "platforms": []

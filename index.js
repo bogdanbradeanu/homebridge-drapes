@@ -16,7 +16,7 @@ function HttpDrapes(log, config) {
 
 HttpDrapes.prototype = {
     getRequestBaseUrl: function() {
-        return 'http://' + this.config['ip'];
+        return 'http://' + this.config['host'];
     },
 
     getServices: function () {
@@ -40,7 +40,7 @@ HttpDrapes.prototype = {
     identify: function(next) {
         this.log('Identify requested!');
         request({
-                url: this.getRequestBaseUrl() + '/identify',
+                url: this.getRequestBaseUrl() + '/api/identify',
                 method: 'GET',
                 headers: {'Content-type': 'application/json'},
                 json: true
@@ -50,13 +50,13 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
-                return next(null, body.statusCode);
+                return next();
             });
     },
 
     getSwitchOnCharacteristic: function (next) {
         request({
-                url: this.getRequestBaseUrl() + '/status',
+                url: this.getRequestBaseUrl() + '/api/status',
                 method: 'GET',
                 headers: {'Content-type': 'application/json'},
                 json: true
@@ -66,26 +66,27 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
-                this.log('STATUS: ' + response.statusCode ? 'Active' : 'Off');
-                return next(null, body.statusCode);
+                this.switchService.getCharacteristic(Characteristic.On).updateValue(response.body.status);
+                this.log('STATUS: ' + response.body.status ? 'Active' : 'Off');
+                return next(null, response.body.status);
             });
     },
 
     setSwitchOnCharacteristic: function (on, next) {
-        request({
-                url: this.getRequestBaseUrl() + '/set',
+        request.post({
+                url: this.getRequestBaseUrl() + '/api/set',
                 body: {"targetState": on},
                 method: 'POST',
                 headers: {'Content-type': 'application/json'},
                 json: true
             },
-            (error, response) => {
+            (error, response, body) => {
                 if (error) {
                     this.log(error.message);
                     return next(error);
                 }
-                this.switchService.getCharacteristic(Characteristic.On).updateValue(Characteristic.On);
-                this.log('STATUS: ' + response.statusCode ? 'Active' : 'Off');
+                this.switchService.getCharacteristic(Characteristic.On).updateValue(response.body.status);
+                this.log('STATUS: ' + response.body.status ? 'Active' : 'Off');
                 return next();
             });
     }
