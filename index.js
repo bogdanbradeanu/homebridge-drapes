@@ -12,6 +12,7 @@ module.exports = function (homebridge) {
 function HttpDrapes(log, config) {
     this.log = log;
     this.config = config;
+    this.switchService = null;
 }
 
 HttpDrapes.prototype = {
@@ -26,15 +27,13 @@ HttpDrapes.prototype = {
             .setCharacteristic(Characteristic.Model, "1.0")
             .setCharacteristic(Characteristic.SerialNumber, "123-456-789");
 
-        let switchService = new Service.Switch("My Switch");
-        switchService
+        this.switchService = new Service.Switch("My Switch");
+        this.switchService
             .getCharacteristic(Characteristic.On)
             .on('get', this.getSwitchOnCharacteristic.bind(this))
             .on('set', this.setSwitchOnCharacteristic.bind(this));
 
-        this.informationService = informationService;
-        this.switchService = switchService;
-        return [informationService, switchService];
+        return [informationService, this.switchService];
     },
 
     identify: function(next) {
@@ -66,8 +65,7 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
-                this.switchService.getCharacteristic(Characteristic.On).updateValue(response.body.status);
-                this.log('STATUS: ' + response.body.status ? 'Active' : 'Off');
+                this.log('GET_STATUS: ' + (response.body.status ? 'On' : 'Off'));
                 return next(null, response.body.status);
             });
     },
@@ -85,8 +83,8 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
-                this.switchService.getCharacteristic(Characteristic.On).updateValue(response.body.status);
-                this.log('STATUS: ' + response.body.status ? 'Active' : 'Off');
+                this.switchService.getCharacteristic(Characteristic.On, true);
+                this.log('NEW_STATUS: ' + (response.body.status ? 'On' : 'Off'));
                 return next();
             });
     }
