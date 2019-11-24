@@ -65,6 +65,7 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
+                this.switchService.getCharacteristic(Characteristic.On, response.body.status);
                 this.log('GET_STATUS: ' + (response.body.status ? 'On' : 'Off'));
                 return next(null, response.body.status);
             });
@@ -83,7 +84,7 @@ HttpDrapes.prototype = {
                     this.log(error.message);
                     return next(error);
                 }
-                this.switchService.getCharacteristic(Characteristic.On, true);
+                this.switchService.getCharacteristic(Characteristic.On, response.body.status);
                 this.log('NEW_STATUS: ' + (response.body.status ? 'On' : 'Off'));
                 return next();
             });
