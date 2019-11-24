@@ -11,19 +11,22 @@ module.exports = function (homebridge) {
 
 function HttpDrapes(log, config) {
     this.log = log;
-    this.getUrl = url.parse(config['getUrl']);
-    this.postUrl = url.parse(config['postUrl']);
+    this.config = config;
 }
 
 HttpDrapes.prototype = {
+    getRequestBaseUrl: function() {
+        return 'http://' + this.config['ip'] + '/';
+    },
+
     getServices: function () {
         let informationService = new Service.AccessoryInformation();
         informationService
-            .setCharacteristic(Characteristic.Manufacturer, "My switch manufacturer")
-            .setCharacteristic(Characteristic.Model, "My switch model")
+            .setCharacteristic(Characteristic.Manufacturer, "Limebear HTTP")
+            .setCharacteristic(Characteristic.Model, "1.0")
             .setCharacteristic(Characteristic.SerialNumber, "123-456-789");
 
-        let switchService = new Service.Switch("My switch");
+        let switchService = new Service.Switch("My Switch");
         switchService
             .getCharacteristic(Characteristic.On)
             .on('get', this.getSwitchOnCharacteristic.bind(this))
@@ -34,40 +37,54 @@ HttpDrapes.prototype = {
         return [informationService, switchService];
     },
 
-    getSwitchOnCharacteristic: function (next) {
-        const me = this;
+    identify: function(next) {
+        this.log('Identify requested!');
         request({
-                url: me.getUrl,
+                url: this.getRequestBaseUrl() + '/identify',
                 method: 'GET',
                 headers: {'Content-type': 'application/json'},
                 json: true
             },
-            function (error, response, body) {
+            (error, response, body) => {
                 if (error) {
-                    // me.log('STATUS: ' + response.statusCode);
-                    me.log(error.message);
+                    this.log(error.message);
                     return next(error);
                 }
-                console.log(body.statusCode);
+                return next(null, body.statusCode);
+            });
+    },
+
+    getSwitchOnCharacteristic: function (next) {
+        request({
+                url: this.getRequestBaseUrl() + '/status',
+                method: 'GET',
+                headers: {'Content-type': 'application/json'},
+                json: true
+            },
+            (error, response, body) => {
+                if (error) {
+                    this.log(error.message);
+                    return next(error);
+                }
+                this.log('STATUS: ' + response.statusCode ? 'on' : 'off');
                 return next(null, body.statusCode);
             });
     },
 
     setSwitchOnCharacteristic: function (on, next) {
-        const me = this;
         request({
-                url: me.postUrl,
+                url: this.getRequestBaseUrl() + '/set',
                 body: {"targetState": on},
                 method: 'POST',
                 headers: {'Content-type': 'application/json'},
                 json: true
             },
-            function (error, response) {
+            (error, response) => {
                 if (error) {
-                    // me.log('STATUS: ' + response.statusCode);
-                    me.log(error.message);
+                    this.log(error.message);
                     return next(error);
                 }
+                this.log('STATUS: ' + response.statusCode ? 'on' : 'off');
                 return next();
             });
     }
